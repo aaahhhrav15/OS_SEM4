@@ -2,6 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "RoundRobin",
+      "request": "launch",
+      "mainClass": "RoundRobin",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
       "name": "C/C++ Runner: Debug Session",
       "type": "lldb",
       "request": "launch",
