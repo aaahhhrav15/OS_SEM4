@@ -1,75 +1,96 @@
 import java.util.Scanner;
 
-public class SJF 
+class SJF 
 {
     public static void main(String[] args) 
     {
         Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter number of processes: ");
+        System.out.print("Enter the number of processes: ");
         int n = scanner.nextInt();
 
-        int[] burstTime = new int[n];
-        int[] process = new int[n];
-        int[] waitingTime = new int[n];
-        int[] turnaroundTime = new int[n];
+        int[] pid = new int[n]; 
+        int[] at = new int[n]; 
+        int[] bt = new int[n]; 
+        int[] ct = new int[n]; 
+        int[] tat = new int[n]; 
+        int[] wt = new int[n]; 
 
-        System.out.println("\nEnter Burst Time:");
         for (int i = 0; i < n; i++) 
         {
-            System.out.printf("P%d: ", i + 1);
-            burstTime[i] = scanner.nextInt();
-            process[i] = i + 1;
+            System.out.printf("Enter the arrival time and burst time of process P%d: ", i + 1);
+            at[i] = scanner.nextInt();
+            bt[i] = scanner.nextInt();
+            pid[i] = i + 1;
         }
 
+        int[][] processes = new int[n][3];
         for (int i = 0; i < n; i++) 
         {
-            int pos = i;
-            for (int j = i + 1; j < n; j++) 
+            processes[i][0] = pid[i];
+            processes[i][1] = at[i];
+            processes[i][2] = bt[i];
+        }
+
+        for (int i = 0; i < n - 1; i++) 
+        {
+            for (int j = 0; j < n - i - 1; j++) 
             {
-                if (burstTime[j] < burstTime[pos])
+                if (processes[j][1] > processes[j + 1][1]) 
                 {
-                    pos = j;
+                    int[] temp = processes[j];
+                    processes[j] = processes[j + 1];
+                    processes[j + 1] = temp;
                 }
             }
-            int temp = burstTime[i];
-            burstTime[i] = burstTime[pos];
-            burstTime[pos] = temp;
-            temp = process[i];
-            process[i] = process[pos];
-            process[pos] = temp;
         }
 
-        waitingTime[0] = 0;
-        int total = 0;
-        for (int i = 1; i < n; i++) 
+        int time = processes[0][1]; 
+        int completed = 0; 
+        boolean[] isCompleted = new boolean[n]; 
+
+        while (completed != n) 
         {
-            waitingTime[i] = 0;
-            for (int j = 0; j < i; j++)
+            int minIndex = -1;
+            int minBurstTime = Integer.MAX_VALUE;
+
+            for (int i = 0; i < n; i++) 
             {
-                waitingTime[i] += burstTime[j];
+                if (!isCompleted[i] && processes[i][1] <= time && processes[i][2] < minBurstTime) 
+                {
+                    minIndex = i;
+                    minBurstTime = processes[i][2];
+                }
             }
-            total += waitingTime[i];
+
+            if (minIndex == -1) 
+            {
+                time++;
+                continue;
+            }
+
+            ct[minIndex] = time + processes[minIndex][2];
+            tat[minIndex] = ct[minIndex] - processes[minIndex][1];
+            wt[minIndex] = tat[minIndex] - processes[minIndex][2];
+            isCompleted[minIndex] = true;
+            completed++;
+            time = ct[minIndex];
         }
 
+        float avgTat = 0, avgWt = 0;
         for (int i = 0; i < n; i++) 
         {
-            turnaroundTime[i] = burstTime[i] + waitingTime[i];
-            total += turnaroundTime[i];
+            avgTat += tat[i];
+            avgWt += wt[i];
         }
+        avgTat /= n;
+        avgWt /= n;
 
-        float avgWaitingTime = (float) total / n;
-        float avgTurnaroundTime = (float) total / n;
-
-        System.out.println("\nProcess\tBurst Time\tWaiting Time\tTurnaround Time");
+        System.out.println("Process\tAT\tBT\tCT\tTAT\tWT");
         for (int i = 0; i < n; i++) 
         {
-            System.out.printf("P%d\t\t%d\t\t%d\t\t%d\n", process[i], burstTime[i], waitingTime[i], turnaroundTime[i]);
+            System.out.printf("P%d\t%d\t%d\t%d\t%d\t%d\n", processes[i][0], processes[i][1], processes[i][2], ct[i], tat[i], wt[i]);
         }
-
-        System.out.printf("\nAverage Waiting Time = %.2f\n", avgWaitingTime);
-        System.out.printf("Average Turnaround Time = %.2f\n", avgTurnaroundTime);
-
-        scanner.close();
+        System.out.printf("Average Turnaround Time: %.2f\n", avgTat);
+        System.out.printf("Average Waiting Time: %.2f\n", avgWt);
     }
 }

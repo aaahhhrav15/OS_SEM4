@@ -3,6 +3,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "sstf",
+      "request": "launch",
+      "mainClass": "diskScheduling.sstf",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
+      "name": "SJF",
+      "request": "launch",
+      "mainClass": "SJF",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
       "name": "FCFS",
       "request": "launch",
       "mainClass": "FCFS",
