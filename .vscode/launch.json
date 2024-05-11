@@ -3,6 +3,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "cLook",
+      "request": "launch",
+      "mainClass": "diskScheduling.cLook",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
+      "name": "look",
+      "request": "launch",
+      "mainClass": "diskScheduling.look",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
       "name": "cScan",
       "request": "launch",
       "mainClass": "diskScheduling.cScan",

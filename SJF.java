@@ -92,5 +92,6 @@ class SJF
         }
         System.out.printf("Average Turnaround Time: %.2f\n", avgTat);
         System.out.printf("Average Waiting Time: %.2f\n", avgWt);
+        scanner.close();
     }
 }

@@ -42,5 +42,6 @@ public class sstf
         }
 
         System.out.println("Total head movement = " + totalMovement);
+        scanner.close();
     }
 }

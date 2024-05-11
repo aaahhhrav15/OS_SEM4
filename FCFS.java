@@ -48,5 +48,6 @@ class FCFS {
 
         System.out.printf("Average Turnaround Time: %.2f\n", (float) totalTat / n);
         System.out.printf("Average Waiting Time: %.2f\n", (float) totalWt / n);
+        scanner.close();
     }
 }
