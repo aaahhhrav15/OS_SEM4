@@ -1,3 +1,4 @@
+package processScheduling;
 import java.util.Scanner;
 
 class SJF 
