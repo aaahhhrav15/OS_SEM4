@@ -3,6 +3,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "SJF",
+      "request": "launch",
+      "mainClass": "processScheduling.SJF",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
+      "name": "RoundRobin",
+      "request": "launch",
+      "mainClass": "processScheduling.RoundRobin",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
       "name": "cLook",
       "request": "launch",
       "mainClass": "diskScheduling.cLook",
