@@ -46,54 +46,27 @@ class SJF
             }
         }
 
-        int time = 0;
-        int completed = 0;
-        boolean[] isCompleted = new boolean[n];
-
-        while (completed != n) 
+        ct[0] = bt[0] + at[0];
+        for (int i = 1; i < n; i++) 
         {
-            int minIndex = -1;
-            int minBurstTime = Integer.MAX_VALUE;
-
-            for (int i = 0; i < n; i++) 
+            int time = 0;
+            if (at[i] > ct[i - 1]) 
             {
-                if (!isCompleted[i] && at[i] <= time && bt[i] < minBurstTime) 
-                {
-                    minIndex = i;
-                    minBurstTime = bt[i];
-                }
+                time = at[i] - ct[i - 1];
             }
-
-            if (minIndex == -1) 
-            {
-                time++;
-                continue;
-            }
-
-            ct[minIndex] = time + bt[minIndex];
-            tat[minIndex] = ct[minIndex] - at[minIndex];
-            wt[minIndex] = tat[minIndex] - bt[minIndex];
-            isCompleted[minIndex] = true;
-            completed++;
-            time = ct[minIndex];
+            ct[i] = ct[i - 1] + bt[i] + time;
         }
 
-        float avgTat = 0, avgWt = 0;
         for (int i = 0; i < n; i++) 
         {
-            avgTat += tat[i];
-            avgWt += wt[i];
+            tat[i] = ct[i] - at[i];
+            wt[i] = tat[i] - bt[i];
         }
-        avgTat /= n;
-        avgWt /= n;
-
         System.out.println("Process\tAT\tBT\tCT\tTAT\tWT");
         for (int i = 0; i < n; i++) 
         {
             System.out.printf("P%d\t%d\t%d\t%d\t%d\t%d\n", pid[i], at[i], bt[i], ct[i], tat[i], wt[i]);
         }
-        System.out.printf("Average Turnaround Time: %.2f\n", avgTat);
-        System.out.printf("Average Waiting Time: %.2f\n", avgWt);
 
         scanner.close();
     }
