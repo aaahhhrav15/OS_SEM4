@@ -1,231 +1,185 @@
 #include <stdio.h>
-int n, nf;
-int in[100];
-int p[50];
-int hit = 0;
-int i, j, k;
-int pgfaultcnt = 0;
-void getData()
+#include <stdbool.h>
+
+void lru(int sequence[], int n, int frames) 
 {
-    printf("\nEnter length of page reference sequence:");
+    int pages[frames];
+    bool hit[frames];
+    for (int i = 0; i < frames; i++) 
+    {
+        pages[i] = -1;
+        hit[i] = false;
+    }
+
+    int faults = 0;
+    int pos = 0;
+
+    for (int i = 0; i < n; i++) 
+    {
+        bool found = false;
+        for (int j = 0; j < frames; j++) 
+        {
+            if (pages[j] == sequence[i]) 
+            {
+                hit[j] = true;
+                found = true;
+                break;
+            }
+            hit[j] = false;
+        }
+
+        if (!found) 
+        {
+            faults++;
+            pages[pos] = sequence[i];
+            pos = (pos + 1) % frames;
+        }
+
+        printf("%d: ", sequence[i]);
+        for (int j = 0; j < frames; j++) 
+        {
+            if (hit[j]) 
+            {
+                printf("%d(H) ", pages[j]);
+            } 
+            else 
+            {
+                printf("%d ", pages[j]);
+            }
+        }
+        printf("\n");
+    }
+
+    printf("Total Page Faults: %d\n\n", faults);
+}
+
+void fifo(int sequence[], int n, int frames) {
+    int pages[frames];
+    for (int i = 0; i < frames; i++) {
+        pages[i] = -1;
+    }
+
+    int faults = 0;
+    int pos = 0;
+
+    for (int i = 0; i < n; i++) 
+    {
+        bool found = false;
+        for (int j = 0; j < frames; j++) 
+        {
+            if (pages[j] == sequence[i]) 
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) 
+        {
+            faults++;
+            pages[pos] = sequence[i];
+            pos = (pos + 1) % frames;
+        }
+
+        printf("%d: ", sequence[i]);
+        for (int j = 0; j < frames; j++) 
+        {
+            printf("%d ", pages[j]);
+        }
+        printf("\n");
+    }
+
+    printf("Total Page Faults: %d\n\n", faults);
+}
+
+void optimal(int sequence[], int n, int frames) 
+{
+    int pages[frames];
+    for (int i = 0; i < frames; i++) 
+    {
+        pages[i] = -1;
+    }
+
+    int faults = 0;
+    int pos = 0;
+
+    for (int i = 0; i < n; i++) 
+    {
+        bool found = false;
+        for (int j = 0; j < frames; j++) 
+        {
+            if (pages[j] == sequence[i]) 
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) 
+        {
+            faults++;
+            int max_pos = -1;
+            int max_val = -1;
+            for (int j = 0; j < frames; j++) 
+            {
+                int k;
+                for (k = i + 1; k < n; k++) 
+                {
+                    if (sequence[k] == pages[j]) 
+                    {
+                        break;
+                    }
+                }
+                if (k == n) 
+                {
+                    max_pos = j;
+                    break;
+                }
+                if (k > max_val) 
+                {
+                    max_val = k;
+                    max_pos = j;
+                }
+            }
+            pages[max_pos] = sequence[i];
+        }
+
+        printf("%d: ", sequence[i]);
+        for (int j = 0; j < frames; j++) 
+        {
+            printf("%d ", pages[j]);
+        }
+        printf("\n");
+    }
+
+    printf("Total Page Faults: %d\n\n", faults);
+}
+
+int main() 
+{
+    int n;
+    printf("Enter the length of page reference sequence: ");
     scanf("%d", &n);
-    printf("\nEnter the page reference sequence:");
-    for (i = 0; i < n; i++)
+
+    printf("Enter the page reference sequence: ");
+    int sequence[n];
+    for (int i = 0; i < n; i++) 
     {
-        scanf("%d", &in[i]);
+        scanf("%d", &sequence[i]);
     }
-    printf("\nEnter no of frames:");
-    scanf("%d", &nf);
-}
-void initialize()
-{
-    pgfaultcnt = 0;
-    for (i = 0; i < nf; i++)
-    {
-        p[i] = 9999;
-    }
-}
 
-int isHit(int data)
-{
-    hit = 0;
-    for (j = 0; j < nf; j++)
-    {
-        if (p[j] == data)
-        {
-            hit = 1;
-            break;
-        }
-    }
-    return hit;
-}
-int getHitIndex(int data)
-{
-    int hitind;
-    for (k = 0; k < nf; k++)
-    {
-        if (p[k] == data)
-        {
-            hitind = k;
-            break;
-        }
-    }
-    return hitind;
-}
-void dispPages()
-{
-    for (k = 0; k < nf; k++)
-    {
-        if (p[k] != 9999)
-        {
-            printf(" %d", p[k]);
-        }
-    }
-}
+    int frames;
+    printf("Enter the number of frames: ");
+    scanf("%d", &frames);
 
-void dispPgFaultCnt()
-{
-    printf("\nTotal no of page faults:%d", pgfaultcnt);
-}
+    printf("\nLRU Page Replacement Algorithm:\n");
+    lru(sequence, n, frames);
 
-void fifo()
-{
-    initialize();
-    for (i = 0; i < n; i++)
-    {
-        printf("\nFor %d :", in[i]);
+    printf("FIFO Page Replacement Algorithm:\n");
+    fifo(sequence, n, frames);
 
-        if (isHit(in[i]) == 0)
-        {
+    printf("Optimal Page Replacement Algorithm:\n");
+    optimal(sequence, n, frames);
 
-            for (k = 0; k < nf - 1; k++)
-            {
-                p[k] = p[k + 1];
-            }
-
-            p[k] = in[i];
-            pgfaultcnt++;
-            dispPages();
-        }
-        else
-            printf("No page fault");
-    }
-    dispPgFaultCnt();
-}
-void optimal()
-{
-    initialize();
-    int near[50];
-    for (i = 0; i < n; i++)
-    {
-        printf("\nFor %d :", in[i]);
-
-        if (isHit(in[i]) == 0)
-        {
-
-            for (j = 0; j < nf; j++)
-            {
-                int pg = p[j];
-                int found = 0;
-                for (k = i; k < n; k++)
-                {
-                    if (pg == in[k])
-                    {
-                        near[j] = k;
-                        found = 1;
-                        break;
-                    }
-                    else
-                    {
-                        found = 0;
-                    }
-                }
-                if (!found)
-                {
-                    near[j] = 9999;
-                }
-            }
-            int max = -9999;
-            int repindex;
-            for (j = 0; j < nf; j++)
-            {
-                if (near[j] > max)
-                {
-                    max = near[j];
-                    repindex = j;
-                }
-            }
-            p[repindex] = in[i];
-            pgfaultcnt++;
-
-            dispPages();
-        }
-        else
-        {
-            printf("No page fault");
-        }
-    }
-    dispPgFaultCnt();
-}
-
-void lru()
-{
-    initialize();
-    int least[50];
-    for (i = 0; i < n; i++)
-    {
-        printf("\nFor %d :", in[i]);
-        if (isHit(in[i]) == 0)
-        {
-            for (j = 0; j < nf; j++)
-            {
-                int pg = p[j];
-                int found = 0;
-                for (k = i - 1; k >= 0; k--)
-                {
-                    if (pg == in[k])
-                    {
-                        least[j] = k;
-                        found = 1;
-                        break;
-                    }
-                    else
-                    {
-                        found = 0;
-                    }
-                }
-                if (!found)
-                {
-                    least[j] = -9999;
-                }
-            }
-            int min = 9999;
-            int repindex;
-            for (j = 0; j < nf; j++)
-            {
-                if (least[j] < min)
-                {
-                    min = least[j];
-                    repindex = j;
-                }
-            }
-            p[repindex] = in[i];
-            pgfaultcnt++;
-
-            dispPages();
-        }
-        else
-        {
-            printf("No page fault!");
-        }
-    }
-    dispPgFaultCnt();
-}
-
-
-int main()
-{
-    int choice;
-    getData();
-    while (1)
-    {
-        printf("\nPage Replacement Algorithms\n1.FIFO\n2.Optimal\n3.LRU\n4.Exit\nEnter your choice:");
-        scanf("%d", &choice);
-        switch (choice)
-        {
-            case 1:
-                fifo();
-                break;
-            case 2:
-                optimal();
-                break;
-            case 3:
-                lru();
-                break;
-            default:
-                return 0;
-                break;
-        }
-    }
     return 0;
 }
