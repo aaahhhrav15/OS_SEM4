@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "FCFS",
+      "request": "launch",
+      "mainClass": "FCFS",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
       "name": "RoundRobin",
       "request": "launch",
       "mainClass": "RoundRobin",
