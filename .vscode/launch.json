@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "cScan",
+      "request": "launch",
+      "mainClass": "diskScheduling.cScan",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
       "name": "scan",
       "request": "launch",
       "mainClass": "diskScheduling.scan",
