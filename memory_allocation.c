@@ -42,7 +42,6 @@ void bestFit(int bsize[], int psize[], int bno, int pno)
         if(index!=-1)
         {
             printf("Process %d is allocated to Block %d\n", i+1, index+1);
-            bsize[index]-=psize[i];
         }
         else
         {
@@ -68,7 +67,6 @@ void worstfit(int bsize[], int psize[], int bno, int pno)
         if(index!=-1)
         {
             printf("Process %d is allocated to Block %d\n", i+1, index+1);
-            bsize[index]-=psize[i];
         }
         else
         {

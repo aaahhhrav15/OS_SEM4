@@ -62,5 +62,6 @@ public class RoundRobin
 
         System.out.println("\n Average Turn Around Time: \t" + avg_tat);
         System.out.println("\n Average Waiting Time: \t" + avg_wt);
+        scanner.close();
     }
 }

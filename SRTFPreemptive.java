@@ -70,7 +70,6 @@ public class SRTFPreemptive
 
         System.out.println("\n\nAverage waiting time =" + (avg / n));
         System.out.println("Average Turnaround time =" + (tt / n));
-
         scanner.close();
     }
 }

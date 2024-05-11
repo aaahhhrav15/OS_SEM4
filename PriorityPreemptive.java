@@ -96,5 +96,6 @@ public class PriorityPreemptive
             System.out.printf(" [%d|P%d] ", cgant[i], gant[i]);
         }
         System.out.print(" " + ct[maxInd]);
+        scanner.close();
     }
 }

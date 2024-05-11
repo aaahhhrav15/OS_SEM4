@@ -55,5 +55,6 @@ public class FCFS
             proc[i] = i + 1;
         }
         avgTime(proc, n, burst_time);
+        scanner.close();
     }
 }
