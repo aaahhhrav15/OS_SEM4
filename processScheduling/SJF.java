@@ -9,7 +9,8 @@ class SJF
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the number of processes: ");
         int n = scanner.nextInt();
-        int time=0;
+        int time=0,y=n;
+        int used[]=new int[n];
 
         int[] pid = new int[n];
         int[] at = new int[n];
@@ -25,8 +26,34 @@ class SJF
             bt[i] = scanner.nextInt();
             pid[i] = i + 1;
         }
+        int minBurst=999;
+        int index=-1;
 
-        
+        while(y!=0)
+        {
+            for(int i=0;i<n;i++)
+            {
+                if(at[i]<=time && bt[i]<minBurst && used[i]==0)
+                {
+                    minBurst=bt[i];
+                    index=i;
+                }
+            }
+            if(index==-1)
+            {
+                time++;
+            }
+            else
+            {
+                used[index]=1;
+                time=time+bt[index];
+                ct[index]=time;
+                minBurst=999;
+                index=-1;
+                y--;
+            }
+        }
+
 
        
         for (int i = 0; i < n; i++) 
