@@ -3,6 +3,27 @@
   "configurations": [
     {
       "type": "java",
+      "name": "priorityNonPreemptive",
+      "request": "launch",
+      "mainClass": "processScheduling.priorityNonPreemptive",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
+      "name": "PriorityPreemptive",
+      "request": "launch",
+      "mainClass": "processScheduling.PriorityPreemptive",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
+      "name": "Round",
+      "request": "launch",
+      "mainClass": "processScheduling.Round",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
       "name": "SRTFPreemptive",
       "request": "launch",
       "mainClass": "processScheduling.SRTFPreemptive",
