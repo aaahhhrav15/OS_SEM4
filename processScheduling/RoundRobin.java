@@ -1,68 +1,84 @@
 package processScheduling;
-import java.util.Scanner;
+import java.util.*;
 
-public class RoundRobin 
+class RoundRobin
 {
     public static void main(String[] args) 
     {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Total number of processes in the system: ");
-        int n = scanner.nextInt();
+        Scanner sc=new Scanner(System.in);
+        System.out.println("Enter the number of processes: ");
+        int n=sc.nextInt();
 
-        int[] at = new int[n];
-        int[] bt = new int[n];
-        int[] temp = new int[n];
-
-        for (int i = 0; i < n; i++) 
+        int pid[]=new int[n];
+        int at[]=new int[n];
+        int bt[]=new int[n];
+        int ct[]=new int[n];
+        int tat[]=new int[n];
+        int wt[]=new int[n];
+        int x[]=new int[n];
+        System.out.println("Enter the arrival time and burst time of each process: ");
+        for(int i=0;i<n;i++)
         {
-            System.out.println("\nEnter the Arrival and Burst time of the Process[" + (i + 1) + "]");
-            System.out.print("Arrival time is: ");
-            at[i] = scanner.nextInt();
-            System.out.print("Burst time is: ");
-            bt[i] = scanner.nextInt();
-            temp[i] = bt[i];
+            System.out.printf("Enter the arrival time and burst time of process P%d: ", i + 1);
+            at[i]=sc.nextInt();
+            bt[i]=sc.nextInt();
+            x[i]=bt[i]; 
+            pid[i]=i+1;
         }
+        System.out.println("Enter the time quantum: ");
+        int tq=sc.nextInt();
+        int time=0,y=n,used[]=new int[n];
 
-        System.out.print("Enter the Time Quantum for the process: \t");
-        int quant = scanner.nextInt();
+        Queue<Integer> queue=new LinkedList<>();
+        int index=-1;
 
-        System.out.println("\nProcess No \t Arrival Time \t Burst Time \t Completion \t TAT \t Waiting Time ");
-
-        int sum = 0, y = n, wt = 0, tat = 0;
-        boolean[] visited = new boolean[n];
-
-        while (y != 0) 
+        while(y!=0)
         {
-            for (int i = 0; i < n; i++) 
+            for(int i=0;i<n;i++)
             {
-                if (temp[i] > 0 && temp[i] <= quant) 
+                if(at[i]<=time && used[i]==0)
                 {
-                    sum += temp[i];
-                    temp[i] = 0;
-                    visited[i] = true;
-                } 
-                else if (temp[i] > quant) 
-                {
-                    temp[i] -= quant;
-                    sum += quant;
-                }
-
-                if (temp[i] == 0 && visited[i]) 
-                {
-                    y--;
-                    System.out.println("Process No[" + (i + 1) + "] \t\t " + at[i]+ "\t\t" + bt[i] + "\t" + sum + "\t\t" + (sum - at[i]) + "\t\t " + (sum - at[i] - bt[i]));
-                    wt += sum - at[i] - bt[i];
-                    tat += sum - at[i];
-                    visited[i] = false;
+                    queue.add(i);
+                    used[i]=1;
                 }
             }
+            if(index!=-1 && bt[index]!=0)
+            {
+                queue.add(index);
+            }
+            if(queue.isEmpty())
+            {
+                time++;
+            }
+            else
+            {
+                index=queue.peek();
+                queue.remove();
+                if(bt[index]<=tq)
+                {
+                    time=time+bt[index];
+                    ct[index]=time;
+                    bt[index]=0;
+                    y--;
+                }
+                else
+                {
+                    time=time+tq;
+                    bt[index]=bt[index]-tq;
+                }   
+            }
+        }
+        for(int i=0;i<n;i++)
+        {
+            tat[i]=ct[i]-at[i];
+            wt[i]=tat[i]-x[i];
+        }
+        System.out.println("Process\tAT\tBT\tCT\tTAT\tWT");
+        for(int i=0;i<n;i++)
+        {
+            System.out.printf("P%d\t%d\t%d\t%d\t%d\t%d\n",pid[i],at[i],x[i],ct[i],tat[i],wt[i]);
         }
 
-        float avg_wt = (float) wt / n;
-        float avg_tat = (float) tat / n;
-
-        System.out.println("\n Average Turn Around Time: \t" + avg_tat);
-        System.out.println("\n Average Waiting Time: \t" + avg_wt);
-        scanner.close();
+        sc.close();
     }
 }
