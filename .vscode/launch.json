@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "DiningPhilosophers",
+      "request": "launch",
+      "mainClass": "DiningPhilosophers",
+      "projectName": "OS Codes_6b682b27"
+    },
+    {
+      "type": "java",
       "name": "priorityNonPreemptive",
       "request": "launch",
       "mainClass": "processScheduling.priorityNonPreemptive",
